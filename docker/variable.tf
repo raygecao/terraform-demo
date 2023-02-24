@@ -3,8 +3,3 @@ variable "external_port" {
   type = number
 }
 
-variable "guestbook_version" {
-  description = "The version for the guestbook app"
-  type = string
-  default = "v1"
-}
