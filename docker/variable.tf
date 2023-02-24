@@ -3,3 +3,7 @@ variable "external_port" {
   type = number
 }
 
+variable "guestbook_image_tag" {
+  description = "The image tag for guestbook"
+  type = string
+}

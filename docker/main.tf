@@ -10,7 +10,7 @@ terraform {
 provider "docker" {}
 
 resource "docker_image" "guestbook" {
-  name         = "ibmcom/guestbook:${terraform.workspace == "dev"?"v1":"v2"}"
+  name         = "ibmcom/guestbook:${var.guestbook_image_tag}"
   keep_locally = true
 }
 
