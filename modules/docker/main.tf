@@ -10,7 +10,7 @@ terraform {
 provider "docker" {}
 
 resource "docker_image" "guestbook" {
-  name         = "ibmcom/guestbook:${terraform.workspace == "dev"?"v1":"v2"}"
+  name         = "ibmcom/guestbook:${var.guestbook_image_tag}"
   keep_locally = true
 }
 
@@ -33,9 +33,4 @@ resource "docker_container" "redis" {
   name = "storage"
   image = docker_image.redis.image_id
   command = ["--requirepass", "dea1452fe9133ea28e60b25f70fa93c43bcfeca9648d0cb470a473f563c91af6"]
-}
-
-
-output "guestbook_addr" {
-  value = "localhost:${var.external_port}"
 }
