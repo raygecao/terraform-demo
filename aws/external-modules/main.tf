@@ -11,21 +11,24 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-resource "aws_vpc" "my-vpc" {
-  cidr_block = var.vpc_cidr_block
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "my-vpc"
+  cidr = var.vpc_cidr_block
+
+  azs             = [var.available_zone]
+  public_subnets  = [var.subnet_cidr_block]
+
   tags = {
-    Name: "${terraform.workspace}-vpc"
+    Name: "external-modules-vpc"
   }
+  public_subnet_tags = {
+    Name: "external-modules-subnet"
+  }
+
 }
 
-resource "aws_subnet" "my-subnet" {
-  availability_zone = var.available_zone
-  vpc_id = aws_vpc.my-vpc.id
-  cidr_block = var.subnet_cidr_block
-  tags = {
-    Name: "${terraform.workspace}-subnet"
-  }
-}
 
 data "aws_ami" "amazon-linux-image" {
   most_recent = true
@@ -42,36 +45,9 @@ data "aws_ami" "amazon-linux-image" {
   }
 }
 
-resource "aws_internet_gateway" "my-igw" {
-  vpc_id = aws_vpc.my-vpc.id
-
-  tags = {
-    Name = "${terraform.workspace}-internet-gateway"
-  }
-}
-
-
-resource "aws_route_table" "my-route-table" {
-  vpc_id = aws_vpc.my-vpc.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.my-igw.id
-  }
-
-  tags = {
-    Name = "${terraform.workspace}-route-table"
-  }
-}
-
-resource "aws_route_table_association" "a-rtb-subnet" {
-  subnet_id      = aws_subnet.my-subnet.id
-  route_table_id = aws_route_table.my-route-table.id
-}
-
 resource "aws_security_group" "my-sg" {
   name   = "my-sg"
-  vpc_id = aws_vpc.my-vpc.id
+  vpc_id = module.vpc.vpc_id
 
   ingress {
     from_port   = 22
@@ -96,7 +72,7 @@ resource "aws_security_group" "my-sg" {
   }
 
   tags = {
-    Name = "${terraform.workspace}-sg"
+    Name = "internal-module-sg"
   }
 }
 
@@ -105,20 +81,20 @@ resource "aws_instance" "my-server" {
   ami                         = data.aws_ami.amazon-linux-image.id
   instance_type               = "t2.micro"
   associate_public_ip_address = true
-  subnet_id                   = aws_subnet.my-subnet.id
+  subnet_id                   = module.vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.my-sg.id]
   availability_zone			  = var.available_zone
   key_name = aws_key_pair.ssh.key_name
 
   tags = {
-    Name = "${terraform.workspace}-inst"
+    Name = "internal-module-inst"
   }
 
-  user_data = file(terraform.workspace == "dev" ? "guest1.sh" : "guest2.sh")
+  user_data = file("launch.sh")
 }
 
 resource aws_key_pair "ssh" {
-  key_name = "${terraform.workspace}_instance_key"
+  key_name = "internal-module-instance-key"
   public_key = file(var.public_key_path)
 }
 
