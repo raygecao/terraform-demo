@@ -8,3 +8,8 @@ variable "guestbook_image_tag" {
   type = string
 }
 
+variable "guestbook_env" {
+  description = "The identity for the environment"
+  type = string
+}
+

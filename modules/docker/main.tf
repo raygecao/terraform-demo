@@ -16,7 +16,7 @@ resource "docker_image" "guestbook" {
 
 resource "docker_container" "guestbook" {
   image = docker_image.guestbook.image_id
-  name  = "tutorial"
+  name  = "tutorial-${var.guestbook_env}"
   ports {
     internal = 3000
     external = var.external_port
@@ -30,7 +30,7 @@ resource "docker_image" "redis" {
 }
 
 resource "docker_container" "redis" {
-  name = "storage"
+  name = "storage-${var.guestbook_env}"
   image = docker_image.redis.image_id
   command = ["--requirepass", "dea1452fe9133ea28e60b25f70fa93c43bcfeca9648d0cb470a473f563c91af6"]
 }

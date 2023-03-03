@@ -5,4 +5,5 @@ terraform {
 inputs = {
   external_port = "13000"
   guestbook_image_tag = "v2"
+  guestbook_env = "prod"
 }
