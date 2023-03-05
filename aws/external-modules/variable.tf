@@ -4,10 +4,6 @@ variable "available_zone" {
   default = "ap-northeast-1a"
 }
 
-variable "public_key_path" {
-  description = "the path of public key"
-  type = string
-}
 
 variable "vpc_cidr_block" {
   description = "the cidr block for the vpc"
