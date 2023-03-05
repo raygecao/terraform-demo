@@ -24,7 +24,7 @@ module "vpc" {
     Name: "external-modules-vpc"
   }
   public_subnet_tags = {
-    Name: "external-modules-subnet"
+    Name: "external-modules-subnet-1"
   }
 
 }
