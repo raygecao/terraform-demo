@@ -114,6 +114,7 @@ resource "aws_instance" "my-server" {
     Name = "${terraform.workspace}-inst"
   }
 
+  user_data_replace_on_change = true
   user_data = file(terraform.workspace == "dev" ? "guest1.sh" : "guest2.sh")
 }
 

@@ -89,6 +89,7 @@ resource "aws_instance" "my-server" {
   tags = {
     Name = "internal-module-inst"
   }
+  user_data_replace_on_change = true
 
   user_data = file("launch.sh")
 }
