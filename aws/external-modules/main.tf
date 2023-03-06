@@ -72,7 +72,7 @@ resource "aws_security_group" "my-sg" {
   }
 
   tags = {
-    Name = "internal-module-sg"
+    Name = "external-module-sg"
   }
 }
 
@@ -87,7 +87,7 @@ resource "aws_instance" "my-server" {
   key_name = aws_key_pair.ssh.key_name
 
   tags = {
-    Name = "internal-module-inst"
+    Name = "external-module-inst"
   }
   user_data_replace_on_change = true
 
@@ -95,7 +95,7 @@ resource "aws_instance" "my-server" {
 }
 
 resource aws_key_pair "ssh" {
-  key_name = "internal-module-instance-key"
+  key_name = "external-module-instance-key"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCq36lhlvScF3zK17uMC1KnFVp1d6WxSgo7EkdPx8eMXzVFZv22WAbXn/4tQgM30o+m8WQhG/gXZV+SKU1ZF6F0Xsub3wlaJiX6j3tA5qYvBpUsY8o2jBgGmcnfM+vHwXtDaS08deswHm0tpzwlhuYR5okf8tHsPSt0LPAqNLZ0PiwLuA1LxcSFE8wLUlq4HzVsiTGcnSfdDBrF1Aq3mvNuOZSJWNiuS6mz7t7/o8i/glsWH6rVYnmUupfyP8izSutRmsydenHYDWrZOb6+BGyUihpEhOioPmCT4w3Mi4i/OdcpyiQa76EcPg/5191LZxmyokt+HROaAVpdESAZU6Pl 1812911733@qq.com"
 }
 
