@@ -72,7 +72,7 @@ resource "aws_security_group" "my-sg" {
   }
 
   tags = {
-    Name = "internal-module-sg"
+    Name = "external-module-sg"
   }
 }
 
@@ -87,7 +87,7 @@ resource "aws_instance" "my-server" {
   key_name = aws_key_pair.ssh.key_name
 
   tags = {
-    Name = "internal-module-inst"
+    Name = "external-module-inst"
   }
   user_data_replace_on_change = true
 
@@ -95,7 +95,7 @@ resource "aws_instance" "my-server" {
 }
 
 resource aws_key_pair "ssh" {
-  key_name = "internal-module-instance-key"
+  key_name = "external-module-instance-key"
   public_key = file(var.public_key_path)
 }
 
